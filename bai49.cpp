@@ -31,7 +31,7 @@ int main(){
         freopen(problem".INP","r",stdin);
         freopen(problem".OUT","w",stdout);
     }
-    if(!(cin>>n)) return 0;
+    cin>>n;
     vis.assign(n+1,false);
     gen(n);
     return 0;
