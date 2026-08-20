@@ -10,7 +10,7 @@ vector<bool> vis;
 
 void gen(ll k){
     if(cur.size()==k){
-        for(int i=0;i<cur.size();i++) cout<<cur[i]<<(i==cur.size()-1?"":" ");
+        for(int i=0;i<cur.size();i++) cout<<cur[i]<<" ";
         cout<<"\n";
         return;
     }
