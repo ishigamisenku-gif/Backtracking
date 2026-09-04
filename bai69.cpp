@@ -3,51 +3,57 @@ using namespace std;
 
 #define ll long long
 #define problem ""
-typedef pair<ll,ll> p;
-const ll mx=1e5+5;
-const ll inf=1e18;
-vector<pair<ll,ll>>adj[mx];
-ll n,m;
-ll dist[mx];
 
-void dijkstra(ll x){
-    priority_queue<p,vector<p>,greater<p>>pq;
-    dist[x]=0;
-    pq.push({0,x});
-    while (!pq.empty()){
-        ll w=pq.top().first;
-        ll u=pq.top().second;
-        pq.pop();
-        if (w>dist[u])continue;
-        for (auto [d,v]:adj[u]){
-            if(dist[u]+d<dist[v]){
-                dist[v]=dist[u]+d;
-                pq.push({dist[v],v});
-            }
-        }
-    }
-}
+typedef pair<ll,ll> p;
+const ll mx=1e3;
+vector<p>adj[mx];
+ll n,m;
+const ll inf=1e18;
 
 int main()
 {
-if (fopen(problem".INP","r")){
-    freopen(problem".INP","r",stdin);
-    freopen(problem".OUT","w",stdout);
-}
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    if (fopen(problem".INP","r")){
+        freopen(problem".INP","r",stdin);
+        freopen(problem".OUT","w",stdout);
+    }
     cin>>n>>m;
-    fill(dist,dist+n+1,inf);
     for (int i=0;i<m;i++){
         ll x,y,w;
         cin>>x>>y>>w;
-        adj[x].push_back({w,y});
-        adj[y].push_back({w,x});
+        adj[x].push_back({y,w});
     }
-    ll res=-inf;
-        dijkstra(1);
-
-    for (int i=1;i<=n;i++){
-        res=max(res,dist[i]);
+    vector<ll>a(n);
+    for (int i=0;i<n;i++)a[i]=i;
+    vector<vector<ll>>d(n,vector<ll>(n,inf));
+    for (int i=0;i<n;i++){
+        for (p e:adj[i])d[i][e.first]=min(d[i][e.first],e.second);
     }
-    cout<<res;
+    ll ans=inf;
+    vector<ll>best;
+    do{
+        ll cur=0;
+        bool ok=true;
+        for (int i=0;i<n;i++){
+            ll w=d[a[i]][a[(i+1)%n]];
+            if (w==inf){
+                ok=false;
+                break;
+            }
+            cur+=w;
+        }
+        if (ok&&cur<ans){
+            best=a;
+            ans=cur;
+        }
+    }
+    while (next_permutation(a.begin()+1,a.end()));
+    if (ans==inf){
+        cout<<-1<<"\n";
+        return 0;
+    }
+    cout<<ans<<"\n";
+    for (int i=0;i<n;i++)cout<<best[i]<<(i==n-1?"":" ");
     return 0;
 }
